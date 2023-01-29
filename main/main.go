@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"local.packages/animals"
+	"local.packages/token"
 )
 
 func main() {
-	fmt.Println(animals.ElephantFeed())
-	fmt.Println(animals.MonkeyFeed())
-	fmt.Println(animals.RabbitFeed())
+	t := token.Token{Type: "type", Literal: "literal"}
+	fmt.Println(t.Type)
+	fmt.Println(t.Literal)
 }
