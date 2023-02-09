@@ -9,6 +9,12 @@ type Token struct {
 	Literal string
 }
 
+// 予約語とそのTokenTypeへのマッピング
+var keywords = map[string]TokenType{
+	"fn":  FUNCTION,
+	"let": LET,
+}
+
 // 定数定義のブロック
 const (
 	// 未知のトークン
@@ -38,3 +44,12 @@ const (
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
 )
+
+// 識別子が予約語にマッチしたら予約語に対応するTokenTypeを、
+// マッチしなかったらIDENTを返す。
+func LookupIdentifier(identifier string) TokenType {
+	if t, ok := keywords[identifier]; ok {
+		return t
+	}
+	return IDENT
+}

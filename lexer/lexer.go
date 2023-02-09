@@ -39,6 +39,8 @@ func (l *Lexer) readChar() {
 func (l *Lexer) NextToken() token.Token {
 	var t token.Token
 
+	l.skipWhitespace()
+
 	switch l.ch {
 	case '=':
 		t = newToken(token.ASSIGN, l.ch)
@@ -59,6 +61,18 @@ func (l *Lexer) NextToken() token.Token {
 	case 0:
 		t.Literal = ""
 		t.Type = token.EOF
+	default:
+		if isLetter(l.ch) {
+			t.Literal = l.readIdentifier()
+			t.Type = token.LookupIdentifier(t.Literal)
+			return t
+		} else if isDigit(l.ch) {
+			t.Type = token.INT
+			t.Literal = l.readNumber()
+			return t
+		} else {
+			t = newToken(token.ILLEGAL, l.ch)
+		}
 	}
 
 	l.readChar()
@@ -68,4 +82,39 @@ func (l *Lexer) NextToken() token.Token {
 // token.Tokenを生成して返す。
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
+}
+
+// 連続する文字を識別子として取り出して文字列として返す。
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+// a-zA-z_にマッチする場合にtrueを返す。
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+// 連続する数字を取り出して文字列として返す。
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+// 0-9にマッチする場合にtrueを返す。
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
+}
+
+// 空白文字を読み飛ばす。
+func (l *Lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
 }
