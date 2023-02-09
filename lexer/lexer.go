@@ -28,7 +28,7 @@ func (l *Lexer) readChar() {
 		// ASCIIコードの"NUL"文字に対応している。
 		l.ch = 0
 	} else {
-		//
+		// それ以外の場合は、その位置にある文字を読み取る。
 		l.ch = l.input[l.readPosition]
 	}
 	l.position = l.readPosition
@@ -43,7 +43,39 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		t = newToken(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			// "=="の場合
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			t = token.Token{Type: token.EQ, Literal: literal}
+		} else {
+			// "=" の場合
+			t = newToken(token.ASSIGN, l.ch)
+		}
+	case '!':
+		if l.peekChar() == '=' {
+			// "!="の場合
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			t = token.Token{Type: token.NOT_EQ, Literal: literal}
+		} else {
+			// "!" の場合
+			t = newToken(token.BANG, l.ch)
+		}
+	case '+':
+		t = newToken(token.PLUS, l.ch)
+	case '-':
+		t = newToken(token.MINUS, l.ch)
+	case '/':
+		t = newToken(token.SLASH, l.ch)
+	case '*':
+		t = newToken(token.ASTERISK, l.ch)
+	case '<':
+		t = newToken(token.LT, l.ch)
+	case '>':
+		t = newToken(token.GT, l.ch)
 	case ';':
 		t = newToken(token.SEMICOLON, l.ch)
 	case '(':
@@ -52,8 +84,6 @@ func (l *Lexer) NextToken() token.Token {
 		t = newToken(token.RPAREN, l.ch)
 	case ',':
 		t = newToken(token.COMMA, l.ch)
-	case '+':
-		t = newToken(token.PLUS, l.ch)
 	case '{':
 		t = newToken(token.LBRACE, l.ch)
 	case '}':
@@ -82,6 +112,17 @@ func (l *Lexer) NextToken() token.Token {
 // token.Tokenを生成して返す。
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
+}
+
+// 現在位置の次の位置の文字を返す。
+// positionは進めない。
+// また、現在位置が末尾の時は0を返す。
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
 }
 
 // 連続する文字を識別子として取り出して文字列として返す。

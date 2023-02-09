@@ -11,8 +11,13 @@ type Token struct {
 
 // 予約語とそのTokenTypeへのマッピング
 var keywords = map[string]TokenType{
-	"fn":  FUNCTION,
-	"let": LET,
+	"fn":     FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
 
 // 定数定義のブロック
@@ -28,8 +33,16 @@ const (
 	INT   = "INT"
 
 	// 演算子
-	ASSIGN = "="
-	PLUS   = "+"
+	ASSIGN   = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	BANG     = "!"
+	ASTERISK = "*"
+	SLASH    = "/"
+	LT       = "<"
+	GT       = ">"
+	EQ       = "=="
+	NOT_EQ   = "!="
 
 	// デリミタ
 	COMMA     = ","
@@ -43,6 +56,11 @@ const (
 	// キーワード
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
 )
 
 // 識別子が予約語にマッチしたら予約語に対応するTokenTypeを、
