@@ -2,12 +2,18 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/user"
 
-	"local.packages/token"
+	"local.packages/repl"
 )
 
 func main() {
-	t := token.Token{Type: "type", Literal: "literal"}
-	fmt.Println(t.Type)
-	fmt.Println(t.Literal)
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Hello %s! This is the Monkey programming language!\n", user.Username)
+	fmt.Printf("Feel free to tyep in commands\n")
+	repl.Start(os.Stdin, os.Stdout)
 }
