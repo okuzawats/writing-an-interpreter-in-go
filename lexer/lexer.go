@@ -93,14 +93,17 @@ func (l *Lexer) NextToken() token.Token {
 		t.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
+			// 識別子の場合
 			t.Literal = l.readIdentifier()
 			t.Type = token.LookupIdentifier(t.Literal)
 			return t
 		} else if isDigit(l.ch) {
+			// 整数リテラルの場合
 			t.Type = token.INT
 			t.Literal = l.readNumber()
 			return t
 		} else {
+			// 不明なトークンの場合
 			t = newToken(token.ILLEGAL, l.ch)
 		}
 	}
