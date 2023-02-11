@@ -6,6 +6,7 @@ import (
 	"local.packages/token"
 )
 
+// 構文解析器
 type Parser struct {
 	l *lexer.Lexer
 
@@ -13,6 +14,8 @@ type Parser struct {
 	peekToken token.Token
 }
 
+// Parserを生成する。
+// Lexerを受け取り、トークンを読み込むことでParserが初期化される。
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{l: l}
 
@@ -23,11 +26,13 @@ func New(l *lexer.Lexer) *Parser {
 	return p
 }
 
+// 次のトークンを読み込む。
 func (p *Parser) nextToken() {
 	p.curToken = p.peekToken
 	p.peekToken = p.l.NextToken()
 }
 
+// ファイル末尾に達するまでStatementを読み込み、読み込んだStatementを持つProgramを返す。
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
@@ -43,6 +48,7 @@ func (p *Parser) ParseProgram() *ast.Program {
 	return program
 }
 
+// Statementを構築して返す。
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
@@ -52,6 +58,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	}
 }
 
+// LetStatementを構築して返す。
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 
@@ -72,14 +79,17 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	return stmt
 }
 
+// 現在のトークンがtと等しい時にtrueを返す。
 func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
 }
 
+// 次のトークンがtと等しい時にtrueを返す。
 func (p *Parser) peekTokenIs(t token.TokenType) bool {
 	return p.peekToken.Type == t
 }
 
+// 次のトークンがtと等しい時に次のトークンを読み込み、trueを返す。
 func (p *Parser) expectPeek(t token.TokenType) bool {
 	if p.peekTokenIs(t) {
 		p.nextToken()
