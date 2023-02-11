@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"local.packages/ast"
 	"local.packages/lexer"
 	"local.packages/token"
@@ -10,6 +12,8 @@ import (
 type Parser struct {
 	l *lexer.Lexer
 
+	errors []string
+
 	curToken  token.Token
 	peekToken token.Token
 }
@@ -17,7 +21,10 @@ type Parser struct {
 // Parserを生成する。
 // Lexerを受け取り、トークンを読み込むことでParserが初期化される。
 func New(l *lexer.Lexer) *Parser {
-	p := &Parser{l: l}
+	p := &Parser{
+		l:      l,
+		errors: []string{},
+	}
 
 	// トークンを2つ読み込む。curTokenとpeekTokenがセットされる。
 	p.nextToken()
@@ -97,4 +104,15 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	} else {
 		return false
 	}
+}
+
+// エラーの文字列のスライスを返す。
+func (p *Parser) Errors() []string {
+	return p.errors
+}
+
+// peekTokenが期待されたものでない場合にエラーのスライスに追加する。
+func (p *Parser) peekError(t token.TokenType) {
+	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
+	p.errors = append(p.errors, msg)
 }
