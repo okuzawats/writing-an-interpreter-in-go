@@ -56,6 +56,7 @@ func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
 
+// return文
 type ReturnStatement struct {
 	Token       token.Token // 'return' トークン
 	ReturnValue Expression
