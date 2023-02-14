@@ -6,25 +6,25 @@ import (
 	"local.packages/token"
 )
 
-// ノード
+// Node ノード
 type Node interface {
 	TokenLiteral() string
 	String() string
 }
 
-// 文
+// Statement 文
 type Statement interface {
 	Node
 	statementNode() // 式と文を間違えていたらコンパイラが教えてくれる
 }
 
-// 式
+// Expression 式
 type Expression interface {
 	Node
 	expressionNode() // 式と文を間違えていたらコンパイラが教えてくれる
 }
 
-// すべてのASTのルートノード
+// Program すべてのASTのルートノード
 type Program struct {
 	// Monkeyプログラムの文の集まりが格納される。
 	Statements []Statement
@@ -48,7 +48,7 @@ func (p *Program) String() string {
 	return out.String()
 }
 
-// let文
+// LetStatement let文
 type LetStatement struct {
 	Token token.Token // token.LET
 	Name  *Identifier // 束縛の識別子を保持する
@@ -77,7 +77,7 @@ func (ls *LetStatement) String() string {
 	return out.String()
 }
 
-// 識別子
+// Identifier 識別子
 type Identifier struct {
 	Token token.Token // token.IDENT
 	Value string
@@ -93,7 +93,7 @@ func (i *Identifier) String() string {
 	return i.Value
 }
 
-// return文
+// ReturnStatement return文
 type ReturnStatement struct {
 	Token       token.Token // 'return' トークン
 	ReturnValue Expression
@@ -119,7 +119,7 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
-// 式文
+// ExpressionStatement 式文
 type ExpressionStatement struct {
 	Token      token.Token // 式の最初のトークン
 	Expression Expression
