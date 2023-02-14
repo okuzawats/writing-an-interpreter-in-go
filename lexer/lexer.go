@@ -2,7 +2,7 @@ package lexer
 
 import "local.packages/token"
 
-// 字句
+// Lexer 字句
 type Lexer struct {
 	// 入力値
 	input string
@@ -14,7 +14,7 @@ type Lexer struct {
 	ch byte
 }
 
-// Lexerを生成して返す。
+// New Lexerを生成して返す。
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
@@ -35,7 +35,7 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
-// 次の文字からtoken.Tokenを生成して返す。
+// NextToken 次の文字からtoken.Tokenを生成して返す。
 func (l *Lexer) NextToken() token.Token {
 	var t token.Token
 

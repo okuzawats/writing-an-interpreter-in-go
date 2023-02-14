@@ -8,7 +8,7 @@ import (
 	"local.packages/token"
 )
 
-// 構文解析器
+// Parser 構文解析器
 type Parser struct {
 	l *lexer.Lexer
 
@@ -18,7 +18,7 @@ type Parser struct {
 	peekToken token.Token
 }
 
-// Parserを生成する。
+// New Parserを生成する。
 // Lexerを受け取り、トークンを読み込むことでParserが初期化される。
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
@@ -39,7 +39,7 @@ func (p *Parser) nextToken() {
 	p.peekToken = p.l.NextToken()
 }
 
-// ファイル末尾に達するまでStatementを読み込み、読み込んだStatementを持つProgramを返す。
+// ParseProgram ファイル末尾に達するまでStatementを読み込み、読み込んだStatementを持つProgramを返す。
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
@@ -122,7 +122,7 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	}
 }
 
-// エラーの文字列のスライスを返す。
+// Errors エラーの文字列のスライスを返す。
 func (p *Parser) Errors() []string {
 	return p.errors
 }

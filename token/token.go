@@ -1,9 +1,9 @@
 package token
 
-// トークンの種別を表すstringの別名
+// TokenType トークンの種別を表すstringの別名
 type TokenType string
 
-// トークンを表す構造体
+// Token トークンを表す構造体
 type Token struct {
 	Type    TokenType
 	Literal string
@@ -22,15 +22,17 @@ var keywords = map[string]TokenType{
 
 // 定数定義のブロック
 const (
-	// 未知のトークン
+	// ILLEGAL 未知のトークン
 	ILLEGAL = "ILLEGAL"
 
-	// End of File
+	// EOF End of File
 	EOF = "EOF"
 
-	// 識別子＋リテラル
+	// IDENT 識別子
 	IDENT = "IDENT"
-	INT   = "INT"
+
+	// INT リテラル
+	INT = "INT"
 
 	// 演算子
 	ASSIGN   = "="
@@ -63,7 +65,7 @@ const (
 	RETURN   = "RETURN"
 )
 
-// 識別子が予約語にマッチしたら予約語に対応するTokenTypeを、
+// LookupIdentifier 識別子が予約語にマッチしたら予約語に対応するTokenTypeを、
 // マッチしなかったらIDENTを返す。
 func LookupIdentifier(identifier string) TokenType {
 	if t, ok := keywords[identifier]; ok {
