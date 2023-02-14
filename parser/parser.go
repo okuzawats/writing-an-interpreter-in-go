@@ -16,6 +16,9 @@ type Parser struct {
 
 	curToken  token.Token
 	peekToken token.Token
+
+	prefixParseFn map[token.TokenType]prefixParseFn
+	infixParseFn  map[token.TokenType]infixParseFn
 }
 
 // New Parserを生成する。
@@ -121,6 +124,13 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 		return false
 	}
 }
+
+type (
+	// 前置構文解析関数
+	prefixParseFn func() ast.Expression
+	// 中置構文解析関数
+	infixParseFn func(expression ast.Expression) ast.Expression
+)
 
 // Errors エラーの文字列のスライスを返す。
 func (p *Parser) Errors() []string {
