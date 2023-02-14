@@ -3,9 +3,13 @@ module okuzawats.com/go
 go 1.19
 
 require local.packages/ast v0.0.0
+
 require local.packages/lexer v0.0.0
+
 require local.packages/parser v0.0.0
+
 require local.packages/repl v0.0.0
+
 require local.packages/token v0.0.0
 
 replace local.packages/ast => ./ast
