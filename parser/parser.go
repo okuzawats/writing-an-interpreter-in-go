@@ -21,6 +21,17 @@ type Parser struct {
 	infixParseFns  map[token.TokenType]infixParseFn
 }
 
+const (
+	_ int = iota
+	LOWEST
+	EQUALS      // =
+	LESSGREATER // >, <
+	SUM         // +
+	PRODUCT     // *
+	PREFIX      // -X, !X
+	CALL        // myFunction(X
+)
+
 // New Parserを生成する。
 // Lexerを受け取り、トークンを読み込むことでParserが初期化される。
 func New(l *lexer.Lexer) *Parser {
@@ -28,6 +39,9 @@ func New(l *lexer.Lexer) *Parser {
 		l:      l,
 		errors: []string{},
 	}
+
+	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+	p.registerPrefix(token.IDENT, p.parseIdentifier)
 
 	// トークンを2つ読み込む。curTokenとpeekTokenがセットされる。
 	p.nextToken()
@@ -66,7 +80,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.RETURN:
 		return p.parseReturnStatement()
 	default:
-		return nil
+		return p.parseExpressionStatement()
 	}
 }
 
@@ -102,6 +116,35 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	}
 
 	return stmt
+}
+
+// 式文を解析する。
+func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	stmt := &ast.ExpressionStatement{Token: p.curToken}
+
+	stmt.Expression = p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+// 式を解析して返す。
+// 前置に関連付けられた構文解析関数を呼び出し、その結果を返す。
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParseFns[p.curToken.Type]
+	if prefix == nil {
+		return nil
+	}
+	leftEx := prefix()
+	return leftEx
+}
+
+// 識別子を解析して返す。
+func (p *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
 
 // 現在のトークンがtと等しい時にtrueを返す。
