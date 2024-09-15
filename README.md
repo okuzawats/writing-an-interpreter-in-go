@@ -15,3 +15,16 @@ go version go1.23.1 darwin/arm64
 ```console
 % go run ./main
 ```
+
+## Monkey言語
+
+```monkey
+let one = 1;
+let two = 2;
+
+let add = fn(x, y) {
+  x + y;
+};
+
+let result = add(one, two);
+```
