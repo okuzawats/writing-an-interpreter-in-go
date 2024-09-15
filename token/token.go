@@ -1,5 +1,8 @@
 package token
 
+// Monkey言語の字句を表すトークンを格納するモジュール。
+// LET、RETURN等、Monkey言語で定義されるトークンが存在し、それぞれのトークンは固有の文字列表現を持つ。
+
 // TokenType トークンの種別を表すstringの別名
 type TokenType string
 
@@ -25,13 +28,13 @@ const (
 	// ILLEGAL 未知のトークン
 	ILLEGAL = "ILLEGAL"
 
-	// EOF End of File
+	// EOF ファイル末端（End of File）を表すトークン
 	EOF = "EOF"
 
-	// IDENT 識別子
+	// IDENT 識別子を表すトークン：add、foobar、x、y、...
 	IDENT = "IDENT"
 
-	// INT リテラル
+	// INT 整数リテラルを表すトークン：1234567...
 	INT = "INT"
 
 	// 演算子
