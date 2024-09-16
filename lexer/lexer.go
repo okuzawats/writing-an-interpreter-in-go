@@ -2,6 +2,9 @@ package lexer
 
 import "local.packages/token"
 
+// Monkey言語の字句解析を行うためのモジュール。
+// ソースコードを受け取り、トークン列を返す。
+
 // Lexer 字句
 type Lexer struct {
 	// 入力値
@@ -44,18 +47,18 @@ func (l *Lexer) NextToken() token.Token {
 	switch l.ch {
 	case '=':
 		if l.peekChar() == '=' {
-			// "=="の場合
+			// "=="の場合（現在のCharが `=` で次のCharも `=` ）
 			ch := l.ch
 			l.readChar()
 			literal := string(ch) + string(l.ch)
 			t = token.Token{Type: token.EQ, Literal: literal}
 		} else {
-			// "=" の場合
+			// "=" の場合（現在のCharが `=` で次のCharが `=` 以外）
 			t = newToken(token.ASSIGN, l.ch)
 		}
 	case '!':
 		if l.peekChar() == '=' {
-			// "!="の場合
+			// "!="の場合（現在のCharが `!` で次のCharが `=` ）
 			ch := l.ch
 			l.readChar()
 			literal := string(ch) + string(l.ch)
@@ -148,6 +151,7 @@ func (l *Lexer) readNumber() string {
 	for isDigit(l.ch) {
 		l.readChar()
 	}
+	// `readNumber` 呼び出し開始時のポジションから、連続した数字の最後のポジションまでのスライスを返す。
 	return l.input[position:l.position]
 }
 
