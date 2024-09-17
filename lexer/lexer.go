@@ -45,20 +45,22 @@ func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()
 
 	switch l.ch {
+	// NextTokenではcharとcharとの比較を行うため、文字列として `==` などとの比較をすることはできない。
+	// そのため、 `=` や `!` の分岐を利用して、2文字から構成されるトークンを解析している。
 	case '=':
 		if l.peekChar() == '=' {
-			// "=="の場合（現在のCharが `=` で次のCharも `=` ）
+			// "=="の場合（現在のcharが `=` で次のcharも `=` ）
 			ch := l.ch
 			l.readChar()
 			literal := string(ch) + string(l.ch)
 			t = token.Token{Type: token.EQ, Literal: literal}
 		} else {
-			// "=" の場合（現在のCharが `=` で次のCharが `=` 以外）
+			// "=" の場合（現在のcharが `=` で次のcharが `=` 以外）
 			t = newToken(token.ASSIGN, l.ch)
 		}
 	case '!':
 		if l.peekChar() == '=' {
-			// "!="の場合（現在のCharが `!` で次のCharが `=` ）
+			// "!="の場合（現在のcharが `!` で次のcharが `=` ）
 			ch := l.ch
 			l.readChar()
 			literal := string(ch) + string(l.ch)
@@ -120,8 +122,8 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
-// 現在位置の次の位置の文字を返す。
-// positionは進めない。
+// 現在位置の次の位置の文字を返し、先読みを行う。
+// `readChar` と異なり、positionは進めない。
 // また、現在位置が末尾の時は0を返す。
 func (l *Lexer) peekChar() byte {
 	if l.readPosition >= len(l.input) {
