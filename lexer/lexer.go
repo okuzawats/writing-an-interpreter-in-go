@@ -122,8 +122,8 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
-// 現在位置の次の位置の文字を返す。
-// positionは進めない。
+// 現在位置の次の位置の文字を返し、先読みを行う。
+// `readChar` と異なり、positionは進めない。
 // また、現在位置が末尾の時は0を返す。
 func (l *Lexer) peekChar() byte {
 	if l.readPosition >= len(l.input) {
