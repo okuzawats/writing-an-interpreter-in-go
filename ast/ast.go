@@ -7,18 +7,22 @@ import (
 )
 
 // Node ノード
+// ASTのノードは、すべてNodeインターフェースを実装する必要がある、すなわち
+//  `TokenLiteral` メソッドを提供し、そのNodeが関連付けられているトークンのリテラル値を返す必要がある。
 type Node interface {
 	TokenLiteral() string
 	String() string
 }
 
 // Statement 文
+// 文は値を返さない。
 type Statement interface {
 	Node
 	statementNode() // 式と文を間違えていたらコンパイラが教えてくれる
 }
 
 // Expression 式
+// 式は値を返す。
 type Expression interface {
 	Node
 	expressionNode() // 式と文を間違えていたらコンパイラが教えてくれる

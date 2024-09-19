@@ -60,17 +60,22 @@ func (p *Parser) nextToken() {
 
 // ParseProgram ファイル末尾に達するまでStatementを読み込み、読み込んだStatementを持つProgramを返す。
 func (p *Parser) ParseProgram() *ast.Program {
+	// ASTのルートノードの生成
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
 
+	// ファイル末尾に至るまで、繰り返しトークンを読み込む。
 	for p.curToken.Type != token.EOF {
+		// 文を構文解析する。
 		stmt := p.parseStatement()
 		if stmt != nil {
+			// parseStatementが文を返した場合は、その戻り値をStatementsに追加する。
 			program.Statements = append(program.Statements, stmt)
 		}
 		p.nextToken()
 	}
 
+	// 構文解析する対象が尽きたら、ASTのルートノードを返す。
 	return program
 }
 
@@ -86,20 +91,25 @@ func (p *Parser) parseStatement() ast.Statement {
 	}
 }
 
-// LetStatementを構築して返す。
+// `let` 文を解析して、LetStatementノードを構築して返す。
+// 現在解析しているLETトークンに基づいて、LetStatementノードを構築している。
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 
+	// 後続するトークンに対するアサーション
+	// 初期状態では後続するトークンに識別子 `IDENT` を期待している。
 	if !p.expectPeek(token.IDENT) {
 		return nil
 	}
-
+	// 識別子 `Identifier` を構築する。
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
+	// 次に等号 `ASSIGN` を期待している。
 	if !p.expectPeek(token.ASSIGN) {
 		return nil
 	}
 
+	// セミコロン `SEMICOLON` に遭遇するまで読み飛ばしている。
 	for !p.curTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
