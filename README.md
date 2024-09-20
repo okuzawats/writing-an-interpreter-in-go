@@ -5,7 +5,20 @@
 ## 環境
 
 ```console
-% brew install go
+% brew install goenv
+```
+
+`~/.zshrc` に以下を追加し、 `source ~/.zshrc` を実行。
+
+```shell
+export GOENV_ROOT=$HOME/.goenv
+export PATH=$GOENV_ROOT/bin:$PATH
+eval "$(goenv init -)"
+```
+
+```console
+% goenv install 1.23.1
+% goenv local 1.23.1
 % go version
 go version go1.23.1 darwin/arm64
 ```
