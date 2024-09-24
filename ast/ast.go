@@ -11,6 +11,7 @@ import (
 //  `TokenLiteral` メソッドを提供し、そのNodeが関連付けられているトークンのリテラル値を返す必要がある。
 type Node interface {
 	TokenLiteral() string
+	// デバッグのためにNodeごとに固有の文字列を出力する。
 	String() string
 }
 
@@ -42,6 +43,8 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
+// Program#stringの実装
+// 各Statementの文字列出力を一つの文字列にまとめて返す。
 func (p *Program) String() string {
 	var out bytes.Buffer
 
@@ -65,6 +68,8 @@ func (ls *LetStatement) TokenLiteral() string {
 	return ls.Token.Literal
 }
 
+// LetStatementの文字列出力を返す。
+// `LET name = value;` 形式の文字列を返す。
 func (ls *LetStatement) String() string {
 	var out bytes.Buffer
 
@@ -93,6 +98,7 @@ func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
 
+// Identifierの文字列出力を返す。
 func (i *Identifier) String() string {
 	return i.Value
 }
@@ -109,6 +115,8 @@ func (rs *ReturnStatement) TokenLiteral() string {
 	return rs.Token.Literal
 }
 
+// ReturnStatementの文字列出力を返す。
+// `RETURN value;` 形式の文字列を返す。
 func (rs *ReturnStatement) String() string {
 	var out bytes.Buffer
 
@@ -135,6 +143,7 @@ func (es *ExpressionStatement) TokenLiteral() string {
 	return es.Token.Literal
 }
 
+// ExpressionStatementの文字列出力を返す。
 func (es *ExpressionStatement) String() string {
 	if es.Expression != nil {
 		return es.Expression.String()
