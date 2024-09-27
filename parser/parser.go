@@ -44,6 +44,8 @@ func New(l *lexer.Lexer) *Parser {
 		errors: []string{},
 	}
 
+	// `prefixParseMap` を初期化し、構文解析関数を登録する。
+	// `token.IDENT` が出現したら `parseIdentifier` を呼び出す、等の登録を行なっている。
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
@@ -150,9 +152,13 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 // 前置に関連付けられた構文解析関数を呼び出し、その結果を返す。
 func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
+
+	// 前置に関連付けられたトークンがなければ `nil` を返す。
 	if prefix == nil {
 		return nil
 	}
+
+	// 前置に関連付けられたトークンがあれば解析して返す。
 	leftEx := prefix()
 	return leftEx
 }
@@ -166,13 +172,14 @@ func (p *Parser) parseIdentifier() ast.Expression {
 func (p *Parser) parseIntegerLiteral() ast.Expression {
 	lit := &ast.IntegerLiteral{Token: p.curToken}
 
+	// 整数リテラルをint64として解釈する。
+	// 解釈に失敗した場合はエラーを返し、成功した場合は `lit.Value` にint64を詰めて返す。
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
 	if err != nil {
 		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
 		p.errors = append(p.errors, msg)
 		return nil
 	}
-
 	lit.Value = value
 
 	return lit
