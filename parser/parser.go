@@ -18,14 +18,17 @@ type Parser struct {
 	curToken  token.Token
 	peekToken token.Token
 
+	// `curToken.Type` に関連付けられた構文解析関数が前置かどうかをチェックするためのマップ
 	prefixParseFns map[token.TokenType]prefixParseFn
+	// `curToken.Type` に関連付けられた構文解析関数が中置かどうかをチェックするためのマップ
 	infixParseFns  map[token.TokenType]infixParseFn
 }
 
+// 優先順位の定義
 const (
-	_ int = iota
+	_ int = iota // 次にくる定数にインクリメントしながら数を与えるための定義
 	LOWEST
-	EQUALS      // =
+	EQUALS      // ==
 	LESSGREATER // >, <
 	SUM         // +
 	PRODUCT     // *
@@ -196,12 +199,12 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	}
 }
 
-// 前置構文を登録する。
+// 前置構文を `prefixParseFns` に登録する。
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
 	p.prefixParseFns[tokenType] = fn
 }
 
-// 中置構文を登録する。
+// 中置構文を `prefixParseFns` に登録する。
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFns[tokenType] = fn
 }
@@ -210,6 +213,7 @@ type (
 	// 前置構文解析関数
 	prefixParseFn func() ast.Expression
 	// 中置構文解析関数
+	// 引数 `expression` は、中置演算子の「左側」に置かれる式。
 	infixParseFn func(expression ast.Expression) ast.Expression
 )
 
