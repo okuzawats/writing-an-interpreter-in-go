@@ -154,6 +154,7 @@ func (es *ExpressionStatement) String() string {
 // IntegerLiteral 整数リテラル
 type IntegerLiteral struct {
 	Token token.Token
+	// ソースコード中の整数リテラルが表現する値を格納するためのフィールド
 	Value int64
 }
 
