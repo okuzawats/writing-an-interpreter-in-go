@@ -21,19 +21,19 @@ type Parser struct {
 	// `curToken.Type` に関連付けられた構文解析関数が前置かどうかをチェックするためのマップ
 	prefixParseFns map[token.TokenType]prefixParseFn
 	// `curToken.Type` に関連付けられた構文解析関数が中置かどうかをチェックするためのマップ
-	infixParseFns  map[token.TokenType]infixParseFn
+	infixParseFns map[token.TokenType]infixParseFn
 }
 
 // 優先順位の定義
 const (
 	_ int = iota // 次にくる定数にインクリメントしながら数を与えるための定義
-	LOWEST
-	EQUALS      // ==
-	LESSGREATER // >, <
-	SUM         // +
-	PRODUCT     // *
-	PREFIX      // -X, !X
-	CALL        // myFunction(X
+	LOWEST       // 最も低い優先順位
+	EQUALS       // ==
+	LESSGREATER  // >, <
+	SUM          // +
+	PRODUCT      // *
+	PREFIX       // -X, !X
+	CALL         // myFunction(X
 )
 
 // New Parserを生成する。
