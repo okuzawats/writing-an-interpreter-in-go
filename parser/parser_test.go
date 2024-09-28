@@ -155,7 +155,7 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 }
 
-func TestParsingPrefixExpressions(t *testing.Test) {
+func TestParsingPrefixExpressions(t *testing.T) {
 	prefixTests := []struct {
 		input        string
 		operator     string
@@ -182,7 +182,7 @@ func TestParsingPrefixExpressions(t *testing.Test) {
 
 		exp, ok := stmt.Expression.(*ast.PrefixExpression)
 		if !ok {
-			f.Fatalf("stmt is not ast.PrefixExpression. got=%T", stmt.Expression)
+			t.Fatalf("stmt is not ast.PrefixExpression. got=%T", stmt.Expression)
 		}
 		if exp.Operator != tt.operator {
 			t.Fatalf("exp.Operator is not '%s'. got=%s", tt.operator, exp.Operator)
