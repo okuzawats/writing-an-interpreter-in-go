@@ -148,6 +148,11 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	return stmt
 }
 
+func (p *Parser) noPrefixParseFnError(t token.TokenType) {
+	msg := fmt.Sprintf("no prefix parse function for %s found", t)
+	p.errors = append(p.errors, msg)
+}
+
 // 式を解析して返す。
 // 前置に関連付けられた構文解析関数を呼び出し、その結果を返す。
 func (p *Parser) parseExpression(precedence int) ast.Expression {
@@ -155,6 +160,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 
 	// 前置に関連付けられたトークンがなければ `nil` を返す。
 	if prefix == nil {
+		p.noPrefixParseFnError(p.curToken.Type)
 		return nil
 	}
 
