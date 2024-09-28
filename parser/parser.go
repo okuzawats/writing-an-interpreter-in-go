@@ -26,14 +26,14 @@ type Parser struct {
 
 // 優先順位の定義
 const (
-	_ int = iota // 次にくる定数にインクリメントしながら数を与えるための定義
-	LOWEST       // 最も低い優先順位
-	EQUALS       // ==
-	LESSGREATER  // >, <
-	SUM          // +
-	PRODUCT      // *
-	PREFIX       // -X, !X
-	CALL         // myFunction(X
+	_           int = iota // 次にくる定数にインクリメントしながら数を与えるための定義
+	LOWEST                 // 最も低い優先順位
+	EQUALS                 // ==
+	LESSGREATER            // >, <
+	SUM                    // +
+	PRODUCT                // *
+	PREFIX                 // -X, !X
+	CALL                   // myFunction(X
 )
 
 // New Parserを生成する。
