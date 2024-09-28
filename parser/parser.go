@@ -26,14 +26,14 @@ type Parser struct {
 
 // 優先順位の定義
 const (
-	_ int = iota // 次にくる定数にインクリメントしながら数を与えるための定義
-	LOWEST       // 最も低い優先順位
-	EQUALS       // ==
-	LESSGREATER  // >, <
-	SUM          // +
-	PRODUCT      // *
-	PREFIX       // -X, !X
-	CALL         // myFunction(X
+	_           int = iota // 次にくる定数にインクリメントしながら数を与えるための定義
+	LOWEST                 // 最も低い優先順位
+	EQUALS                 // ==
+	LESSGREATER            // >, <
+	SUM                    // +
+	PRODUCT                // *
+	PREFIX                 // -X, !X
+	CALL                   // myFunction(X
 )
 
 // New Parserを生成する。
@@ -49,6 +49,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
+	p.registerPrefix(token.BANG, p.parsePrefixExpression)
+	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 
 	// トークンを2つ読み込む。curTokenとpeekTokenがセットされる。
 	p.nextToken()
@@ -148,6 +150,11 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	return stmt
 }
 
+func (p *Parser) noPrefixParseFnError(t token.TokenType) {
+	msg := fmt.Sprintf("no prefix parse function for %s found", t)
+	p.errors = append(p.errors, msg)
+}
+
 // 式を解析して返す。
 // 前置に関連付けられた構文解析関数を呼び出し、その結果を返す。
 func (p *Parser) parseExpression(precedence int) ast.Expression {
@@ -155,6 +162,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 
 	// 前置に関連付けられたトークンがなければ `nil` を返す。
 	if prefix == nil {
+		p.noPrefixParseFnError(p.curToken.Type)
 		return nil
 	}
 
@@ -183,6 +191,20 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 	lit.Value = value
 
 	return lit
+}
+
+// 前置式を解析して返す。
+func (p *Parser) parsePrefixExpression() ast.Expression {
+	expression := &ast.PrefixExpression{
+		Token:    p.curToken,
+		Operator: p.curToken.Literal,
+	}
+
+	// 前置式に対応する式を読み込み、Rightに詰める。
+	p.nextToken()
+	expression.Right = p.parseExpression(PREFIX)
+
+	return expression
 }
 
 // 現在のトークンがtと等しい時にtrueを返す。
