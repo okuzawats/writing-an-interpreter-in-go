@@ -18,4 +18,8 @@ jobs:
     - name: install dependencies
       run: go mod tidy
     - name: run tests
-      run: go test ./... -v
+      run: |
+        go test ./ast -v
+        go test ./lexer -v
+        go test ./parser -v
+        go test ./token -v
