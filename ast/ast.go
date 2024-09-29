@@ -8,7 +8,8 @@ import (
 
 // Node ノード
 // ASTのノードは、すべてNodeインターフェースを実装する必要がある、すなわち
-//  `TokenLiteral` メソッドを提供し、そのNodeが関連付けられているトークンのリテラル値を返す必要がある。
+//
+//	`TokenLiteral` メソッドを提供し、そのNodeが関連付けられているトークンのリテラル値を返す必要がある。
 type Node interface {
 	TokenLiteral() string
 	// デバッグのためにNodeごとに固有の文字列を出力する。
@@ -170,9 +171,9 @@ func (il *IntegerLiteral) String() string {
 
 // 前置
 type PrefixExpression struct {
-	Token token.Token // 前置トークン、例えば「!」
+	Token    token.Token // 前置トークン、例えば「!」
 	Operator string
-	Right Expression
+	Right    Expression
 }
 
 func (pe *PrefixExpression) expressionNode() {}
