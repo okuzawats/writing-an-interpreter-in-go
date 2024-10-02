@@ -36,6 +36,40 @@ const (
 	CALL                   // myFunction(X
 )
 
+// 優先順位テーブル
+var precedences = map[token.TokenType]int{
+	token.EQ:       EQUALS,
+	token.NOT_EQ:   EQUALS,
+	token.LT:       LESSGREATER,
+	token.GT:       LESSGREATER,
+	token.PLUS:     SUM,
+	token.MINUS:    SUM,
+	token.SLASH:    PRODUCT,
+	token.ASTERISK: PRODUCT,
+}
+
+// 現在位置の次の位置のトークンの優先順位を返す。
+func (p *Parser) peekPrecedence() int {
+	// 優先順位テーブルに対象のトークンが見つかれば、見つかった優先順位を返す。
+	if p, ok := precedences[p.peekToken.Type]; ok {
+		return p
+	}
+
+	// 見つからなかったら、最も低い優先順位を返す。
+	return LOWEST
+}
+
+// 現在位置のトークンの優先順位を返す。
+func (p *Parser) curPrecedence() int {
+	// 優先順位テーブルに対象のトークンが見つかれば、見つかった優先順位を返す。
+	if p, ok := precedences[p.curToken.Type]; ok {
+		return p
+	}
+
+	// 見つからなかったら、最も低い優先順位を返す。
+	return LOWEST
+}
+
 // New Parserを生成する。
 // Lexerを受け取り、トークンを読み込むことでParserが初期化される。
 func New(l *lexer.Lexer) *Parser {
@@ -44,13 +78,23 @@ func New(l *lexer.Lexer) *Parser {
 		errors: []string{},
 	}
 
-	// `prefixParseMap` を初期化し、構文解析関数を登録する。
-	// `token.IDENT` が出現したら `parseIdentifier` を呼び出す、等の登録を行なっている。
+	// `prefixParseFns` を初期化し、前置演算子の構文解析関数を登録する。
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
+
+	// `infixParseFns` を初期化し、中置演算子の構文解析関数を登録する。
+	p.infixParseFns = make(map[token.TokenType]infixParseFn)
+	p.registerInfix(token.PLUS, p.parseInfixExpression)
+	p.registerInfix(token.MINUS, p.parseInfixExpression)
+	p.registerInfix(token.SLASH, p.parseInfixExpression)
+	p.registerInfix(token.ASTERISK, p.parseInfixExpression)
+	p.registerInfix(token.EQ, p.parseInfixExpression)
+	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
+	p.registerInfix(token.LT, p.parseInfixExpression)
+	p.registerInfix(token.GT, p.parseInfixExpression)
 
 	// トークンを2つ読み込む。curTokenとpeekTokenがセットされる。
 	p.nextToken()
@@ -167,8 +211,21 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	}
 
 	// 前置に関連付けられたトークンがあれば解析して返す。
-	leftEx := prefix()
-	return leftEx
+	leftExp := prefix()
+
+	// 次のトークンに紐つけられている `infixParseFn` を探し、その返り値を渡す。
+	// これをより低い優先順位のトークンに遭遇するまで繰り返し実行する。
+	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
+		infix := p.infixParseFns[p.peekToken.Type]
+		if infix == nil {
+			return leftExp
+		}
+
+		p.nextToken()
+		leftExp = infix(leftExp)
+	}
+
+	return leftExp
 }
 
 // 識別子を解析して返す。
@@ -236,6 +293,22 @@ func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
 // 中置構文を `prefixParseFns` に登録する。
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFns[tokenType] = fn
+}
+
+// 中置式を解析し、Expressionノードを返す。
+// Leftは引数として受け取り、構文を解析してRightを取り出してExpressionに紐つけている。
+func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	expression := &ast.InfixExpression{
+		Token:    p.curToken,
+		Operator: p.curToken.Literal,
+		Left:     left,
+	}
+
+	precedence := p.curPrecedence()
+	p.nextToken()
+	expression.Right = p.parseExpression(precedence)
+
+	return expression
 }
 
 type (
