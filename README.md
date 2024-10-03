@@ -23,6 +23,14 @@ eval "$(goenv init -)"
 go version go1.23.1 darwin/arm64
 ```
 
+## IDE
+
+### Visual Studio Code
+
+Visual Studio CodeのExtensionである、"Go for Visual Studio Code"を有効化します。このExtensionを有効化することにより、Visual Studio CodeでのGo言語のサポートが強化されます。
+
+- [Go - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=golang.Go)
+
 ## 実行
 
 ```console
