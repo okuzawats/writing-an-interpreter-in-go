@@ -31,6 +31,8 @@ Visual Studio CodeのExtensionである、"Go for Visual Studio Code"を有効�
 
 - [Go - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=golang.Go)
 
+Settingsから、Format on Saveを有効化します。Visual Studio CodeのSettingsを開き、"Format On Save"を検索するか、 `TextEditor > Formatting` の中から"Format On Save"を探して、"Format a file on save"にチェックを入れます。
+
 ## 実行
 
 ```console
