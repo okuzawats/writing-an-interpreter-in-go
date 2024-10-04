@@ -347,7 +347,7 @@ func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	return true
 }
 
-// `exp` がIdentifier（識別子）であることをテストするための便利関数
+// `exp` がIdentifier（識別子）であることをテストするための便利関数。
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)
 
@@ -367,4 +367,19 @@ func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	}
 
 	return true
+}
+
+// リテラルのテストを行うための便利関数。
+// 整数リテラルであれば整数リテラルのテスト関数を、識別子であれば識別子のテスト関数を呼び出す。
+func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{}) bool {
+	switch v := expected.(type) {
+	case int:
+		return testIntegerLiteral(t, exp, int64(v))
+	case int64:
+		return testIntegerLiteral(t, exp, v)
+	case string:
+		return testIdentifier(t, exp, v)
+	}
+	t.Errorf("type of exp not handled. got=%T", exp)
+	return false
 }
