@@ -86,6 +86,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.TRUE, p.parseBoolean)
 	p.registerPrefix(token.FALSE, p.parseBoolean)
+	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 
 	// `infixParseFns` を初期化し、中置演算子の構文解析関数を登録する。
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
@@ -269,6 +270,19 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 // 真偽値を解析して返す。
 func (p *Parser) parseBoolean() ast.Expression {
 	return &ast.Boolean{Token: p.curToken, Value: p.curTokenIs(token.TRUE)}
+}
+
+// 丸括弧 `()` 内の式を指揮を解析して返す。
+func (p *Parser) parseGroupedExpression() ast.Expression {
+	p.nextToken()
+
+	exp := p.parseExpression(LOWEST)
+
+	if !p.expectPeek(token.RPAREN) {
+		return nil
+	}
+
+	return exp
 }
 
 // 現在のトークンがtと等しい時にtrueを返す。
