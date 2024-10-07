@@ -232,3 +232,59 @@ func (b *Boolean) TokenLiteral() string {
 func (b *Boolean) String() string {
 	return b.Token.Literal
 }
+
+type IfExpression struct {
+	// `if` トークン
+	Token token.Token
+	// `if` の条件式
+	Condition Expression
+	// 条件式が真である場合に対応するブロック
+	Consequence *BlockStatement
+	// 条件式が偽である場合の `else` に対応するブロック。 `else` がなければnil
+	Alternative *BlockStatement
+}
+
+func (ie *IfExpression) expressionNode() {}
+
+func (ie *IfExpression) TokenLiteral() string {
+	return ie.Token.Literal
+}
+
+func (ie *IfExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("if")
+	out.WriteString(ie.Condition.String())
+	out.WriteString(" ")
+	out.WriteString(ie.Consequence.String())
+
+	if ie.Alternative != nil {
+		out.WriteString("else")
+		out.WriteString(" ")
+		out.WriteString(ie.Alternative.String())
+	}
+
+	return out.String()
+}
+
+// ブロック式
+type BlockStatement struct {
+	Token      token.Token
+	Statements []Statement
+}
+
+func (bs *BlockStatement) statementNode() {}
+
+func (bs *BlockStatement) TokenLiteral() string {
+	return bs.Token.Literal
+}
+
+func (bs *BlockStatement) String() string {
+	var out bytes.Buffer
+
+	for _, s := range bs.Statements {
+		out.WriteString(s.String())
+	}
+
+	return out.String()
+}
