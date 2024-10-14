@@ -21,5 +21,6 @@ jobs:
       run: |
         go test ./ast -v
         go test ./lexer -v
+        go test ./object -v
         go test ./parser -v
         go test ./token -v
