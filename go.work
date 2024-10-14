@@ -4,6 +4,7 @@ use (
 	.
 	ast
 	lexer
+	object
 	parser
 	repl
 	token
