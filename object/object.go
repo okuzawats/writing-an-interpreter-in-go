@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// Objectの種別
 type ObjectType string
 
 const (
@@ -17,7 +18,7 @@ const (
 
 // Objectを表すinterface
 type Object interface {
-	// Objectの型
+	// Objectの種別
 	Type() ObjectType
 	// Objectの文字列表現
 	Inspect() string
@@ -49,6 +50,7 @@ func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
 }
 
+// null型のObject
 type Null struct{}
 
 func (n *Null) Type() ObjectType {
