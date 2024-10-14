@@ -20,6 +20,7 @@ jobs:
     - name: run tests
       run: |
         go test ./ast -v
+        go test ./evaluator -v
         go test ./lexer -v
         go test ./object -v
         go test ./parser -v

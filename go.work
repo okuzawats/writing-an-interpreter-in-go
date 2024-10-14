@@ -3,6 +3,7 @@ go 1.23.1
 use (
 	.
 	ast
+	evaluator
 	lexer
 	object
 	parser
