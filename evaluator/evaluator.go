@@ -28,7 +28,7 @@ func Eval(node ast.Node) object.Object {
 	case *ast.InfixExpression:
 		left := Eval(node.Left)
 		right := Eval(node.Right)
-		return evalInfixExpression(node.Operator, left, right)
+		return evalIntegerInfixExpression(node.Operator, left, right)
 	}
 	return nil
 }
@@ -75,7 +75,7 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 	return &object.Integer{Value: -value}
 }
 
-func evalInfixExpression(operator string, left, right object.Object) object.Object {
+func evalIntegerInfixExpression(operator string, left, right object.Object) object.Object {
 	leftVal := left.(*object.Integer).Value
 	rightVal := right.(*object.Integer).Value
 
