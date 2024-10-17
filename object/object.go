@@ -14,6 +14,8 @@ const (
 	BOOLEAN_OBJ = "BOOLEAN"
 	// null型のオブジェクトを表す文字列
 	NULL_OBJ = "NULL"
+	// returnで返すオブジェクトを表す文字列
+	RETURN_VALUE_OBJECT = "RETURN_VALUE"
 )
 
 // Objectを表すinterface
@@ -59,4 +61,17 @@ func (n *Null) Type() ObjectType {
 
 func (n *Null) Inspect() string {
 	return "null"
+}
+
+// returnで返すべきObjectをラップするObject
+type ReturnValue struct {
+	Value Object
+}
+
+func (rv *ReturnValue) Type() ObjectType {
+	return RETURN_VALUE_OBJECT
+}
+
+func (rv *ReturnValue) Inspect() string {
+	return rv.Value.Inspect()
 }
