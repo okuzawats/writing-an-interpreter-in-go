@@ -16,6 +16,8 @@ const (
 	NULL_OBJ = "NULL"
 	// returnで返すオブジェクトを表す文字列
 	RETURN_VALUE_OBJECT = "RETURN_VALUE"
+	// 構文エラーオブジェクトを表す文字列
+	ERROR_OBJ = "ERROR"
 )
 
 // Objectを表すinterface
@@ -74,4 +76,17 @@ func (rv *ReturnValue) Type() ObjectType {
 
 func (rv *ReturnValue) Inspect() string {
 	return rv.Value.Inspect()
+}
+
+// 構文エラー
+type Error struct {
+	Message string
+}
+
+func (e *Error) Type() ObjectType {
+	return ERROR_OBJ
+}
+
+func (e *Error) Inspect() string {
+	return "ERROR: " + e.Message
 }
