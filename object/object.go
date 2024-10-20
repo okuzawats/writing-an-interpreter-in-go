@@ -1,7 +1,11 @@
 package object
 
 import (
+	"bytes"
 	"fmt"
+	"strings"
+
+	"local.packages/ast"
 )
 
 // Objectの種別
@@ -12,6 +16,8 @@ const (
 	INTEGER_OBJ = "INTEGER"
 	// 真偽値型のオブジェクトを表す文字列
 	BOOLEAN_OBJ = "BOOLEAN"
+	// 関数オブジェクトを表す文字列
+	FUNCTION_OBJ = "FUNCTION"
 	// null型のオブジェクトを表す文字列
 	NULL_OBJ = "NULL"
 	// returnで返すオブジェクトを表す文字列
@@ -52,6 +58,34 @@ func (b *Boolean) Type() ObjectType {
 
 func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
+}
+
+type Function struct {
+	Parameters []*ast.Identifier
+	Body       *ast.BlockStatement
+	Env        *Environment
+}
+
+func (f *Function) Type() ObjectType {
+	return FUNCTION_OBJ
+}
+
+func (f *Function) Inspect() string {
+	var out bytes.Buffer
+
+	params := []string{}
+	for _, p := range f.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString("fn")
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") {\n")
+	out.WriteString(f.Body.String())
+	out.WriteString("\n")
+
+	return out.String()
 }
 
 // null型のObject
