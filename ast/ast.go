@@ -169,6 +169,22 @@ func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
 
+// 文字列
+type StringLiteral struct {
+	Token token.Token
+	Value string
+}
+
+func (sl *StringLiteral) expressionNode() {}
+
+func (sl *StringLiteral) TokenLiteral() string {
+	return sl.Token.Literal
+}
+
+func (sl *StringLiteral) String() string {
+	return sl.Token.Literal
+}
+
 // 前置
 type PrefixExpression struct {
 	Token    token.Token // 前置トークン、例えば「!」

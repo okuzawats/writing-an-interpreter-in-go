@@ -16,6 +16,8 @@ const (
 	INTEGER_OBJ = "INTEGER"
 	// 真偽値型のオブジェクトを表す文字列
 	BOOLEAN_OBJ = "BOOLEAN"
+	// 文字列型のオブジェクトを表す文字列
+	STRING_OBJ = "STRING"
 	// 関数オブジェクトを表す文字列
 	FUNCTION_OBJ = "FUNCTION"
 	// null型のオブジェクトを表す文字列
@@ -60,6 +62,20 @@ func (b *Boolean) Inspect() string {
 	return fmt.Sprintf("%t", b.Value)
 }
 
+// 文字列型のObject
+type String struct {
+	Value string
+}
+
+func (s *String) Type() ObjectType {
+	return STRING_OBJ
+}
+
+func (s *String) Inspect() string {
+	return s.Value
+}
+
+// 関数型のObject
 type Function struct {
 	Parameters []*ast.Identifier
 	Body       *ast.BlockStatement

@@ -37,6 +37,9 @@ const (
 	// INT 整数リテラルを表すトークン：1234567...
 	INT = "INT"
 
+	// STRING 文字列リテラルを表すトークン
+	STRING = "STRING"
+
 	// 演算子
 	ASSIGN   = "="
 	PLUS     = "+"
