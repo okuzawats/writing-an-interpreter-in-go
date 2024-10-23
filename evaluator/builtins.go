@@ -1,7 +1,7 @@
 package evaluator
 
 import (
-	"local.packages/object"
+	"okuzawats.com/go/object"
 )
 
 // 組み込み関数のマッピング

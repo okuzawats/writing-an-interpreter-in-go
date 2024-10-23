@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"local.packages/token"
+	"okuzawats.com/go/token"
 )
 
 // Node ノード

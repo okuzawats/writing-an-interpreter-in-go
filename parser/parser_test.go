@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"local.packages/ast"
-	"local.packages/lexer"
+	"okuzawats.com/go/ast"
+	"okuzawats.com/go/lexer"
 )
 
 func TestLetStatements(t *testing.T) {

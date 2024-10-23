@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"local.packages/ast"
-	"local.packages/lexer"
-	"local.packages/token"
+	"okuzawats.com/go/ast"
+	"okuzawats.com/go/lexer"
+	"okuzawats.com/go/token"
 )
 
 // Parser 構文解析器
