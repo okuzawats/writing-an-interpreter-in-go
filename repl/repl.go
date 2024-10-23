@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 
-	"local.packages/evaluator"
-	"local.packages/lexer"
-	"local.packages/object"
-	"local.packages/parser"
+	"okuzawats.com/go/evaluator"
+	"okuzawats.com/go/lexer"
+	"okuzawats.com/go/object"
+	"okuzawats.com/go/parser"
 )
 
 const PROMPT = ">> "

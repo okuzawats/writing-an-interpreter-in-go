@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"local.packages/ast"
+	"okuzawats.com/go/ast"
 )
 
 // Objectの種別

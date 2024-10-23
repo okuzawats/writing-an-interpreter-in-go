@@ -3,7 +3,7 @@ package ast
 import (
 	"testing"
 
-	"local.packages/token"
+	"okuzawats.com/go/token"
 )
 
 func TestString(t *testing.T) {

@@ -1,6 +1,6 @@
 package lexer
 
-import "local.packages/token"
+import "okuzawats.com/go/token"
 
 // Monkey言語の字句解析を行うためのモジュール。
 // ソースコードを受け取り、トークン列を返す。

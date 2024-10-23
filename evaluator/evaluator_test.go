@@ -3,9 +3,9 @@ package evaluator
 import (
 	"testing"
 
-	"local.packages/lexer"
-	"local.packages/object"
-	"local.packages/parser"
+	"okuzawats.com/go/lexer"
+	"okuzawats.com/go/object"
+	"okuzawats.com/go/parser"
 )
 
 func TestStringLiteral(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/user"
 
-	"local.packages/repl"
+	"okuzawats.com/go/repl"
 )
 
 func main() {

@@ -3,8 +3,8 @@ package evaluator
 import (
 	"fmt"
 
-	"local.packages/ast"
-	"local.packages/object"
+	"okuzawats.com/go/ast"
+	"okuzawats.com/go/object"
 )
 
 var (
