@@ -140,3 +140,6 @@ func (e *Error) Type() ObjectType {
 func (e *Error) Inspect() string {
 	return "ERROR: " + e.Message
 }
+
+// 組み込み関数
+type BuildtinFunction func(args ...Object) Object
