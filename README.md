@@ -17,10 +17,10 @@ eval "$(goenv init -)"
 ```
 
 ```console
-% goenv install 1.23.1
-% goenv local 1.23.1
+% goenv install 1.23.2
+% goenv local 1.23.2
 % go version
-go version go1.23.1 darwin/arm64
+go version go1.23.2 darwin/arm64
 ```
 
 ## IDE
