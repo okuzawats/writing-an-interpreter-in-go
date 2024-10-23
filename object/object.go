@@ -26,6 +26,8 @@ const (
 	RETURN_VALUE_OBJECT = "RETURN_VALUE"
 	// 構文エラーオブジェクトを表す文字列
 	ERROR_OBJ = "ERROR"
+	// 組み込み関数オブジェクトを表す文字列
+	BUILTIN_OBJ = "BUILTIN"
 )
 
 // Objectを表すinterface
@@ -139,4 +141,20 @@ func (e *Error) Type() ObjectType {
 
 func (e *Error) Inspect() string {
 	return "ERROR: " + e.Message
+}
+
+// 組み込み関数
+type BuildtinFunction func(args ...Object) Object
+
+// 組み込み関数
+type Buildtin struct {
+	Fn BuildtinFunction
+}
+
+func (b *Buildtin) Type() ObjectType {
+	return BUILTIN_OBJ
+}
+
+func (b *Buildtin) Inspect() string {
+	return "builtin function"
 }
