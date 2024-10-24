@@ -91,6 +91,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 
 	// `infixParseFns` を初期化し、中置演算子の構文解析関数を登録する。
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
@@ -350,6 +351,39 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit.Body = p.parseBlockStatements()
 
 	return lit
+}
+
+func (p *Parser) parseArrayLiteral() ast.Expression {
+	array := &ast.ArrayLiteral{Token: p.curToken}
+	array.Elements = p.parseExpressionList(token.RBRACKET)
+	return array
+}
+
+func (p *Parser) parseExpressionList(end token.TokenType) []ast.Expression {
+	list := []ast.Expression{}
+
+	// 空配列の場合
+	if p.peekTokenIs(end) {
+		p.nextToken()
+		return list
+	}
+
+	p.nextToken()
+	list = append(list, p.parseExpression(LOWEST))
+
+	// カンマ区切りの引数の解析
+	for p.peekTokenIs(token.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		list = append(list, p.parseExpression(LOWEST))
+	}
+
+	// ブラケットが正しく閉じられていない場合
+	if !p.expectPeek(end) {
+		return nil
+	}
+
+	return list
 }
 
 func (p *Parser) parseFunctionParameters() []*ast.Identifier {
