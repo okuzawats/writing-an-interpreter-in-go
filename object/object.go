@@ -28,6 +28,8 @@ const (
 	ERROR_OBJ = "ERROR"
 	// 組み込み関数オブジェクトを表す文字列
 	BUILTIN_OBJ = "BUILTIN"
+	// 配列オブジェクトを表す文字列
+	ARRAY_OBJ = "ARRAY"
 )
 
 // Objectを表すinterface
@@ -157,4 +159,28 @@ func (b *Buildtin) Type() ObjectType {
 
 func (b *Buildtin) Inspect() string {
 	return "builtin function"
+}
+
+// 配列
+type Array struct {
+	Elements []Object
+}
+
+func (ao *Array) Type() ObjectType {
+	return ARRAY_OBJ
+}
+
+func (ao *Array) Inspect() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, e := range ao.Elements {
+		elements = append(elements, e.Inspect())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+
+	return out.String()
 }
