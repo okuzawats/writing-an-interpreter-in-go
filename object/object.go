@@ -31,6 +31,8 @@ const (
 	BUILTIN_OBJ = "BUILTIN"
 	// 配列オブジェクトを表す文字列
 	ARRAY_OBJ = "ARRAY"
+	// ハッシュオブジェクトを表す文字列
+	HASH_OBJ = "HASH"
 )
 
 // Objectを表すinterface
@@ -213,4 +215,31 @@ func (s *String) HashKey() HashKey {
 	h.Write([]byte(s.Value))
 
 	return HashKey{Type: s.Type(), Value: h.Sum64()}
+}
+
+type HashPair struct {
+	Key   Object
+	Value Object
+}
+
+type Hash struct {
+	Pairs map[HashKey]HashPair
+}
+
+func (h *Hash) Type() ObjectType {
+	return HASH_OBJ
+}
+func (h *Hash) Inspect() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for _, pair := range h.Pairs {
+		pairs = append(pairs, fmt.Sprintf("%s: %s", pair.Key.Inspect(), pair.Value.Inspect()))
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+
+	return out.String()
 }
