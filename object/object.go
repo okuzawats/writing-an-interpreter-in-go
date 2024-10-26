@@ -243,3 +243,8 @@ func (h *Hash) Inspect() string {
 
 	return out.String()
 }
+
+// オブジェクトがハッシュキーとして利用可能であることを表す型
+type Hashable interface {
+	HashKey() HashKey
+}
