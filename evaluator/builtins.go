@@ -1,11 +1,21 @@
 package evaluator
 
 import (
+	"fmt"
+
 	"okuzawats.com/go/object"
 )
 
 // 組み込み関数のマッピング
 var builtins = map[string]*object.Buildtin{
+	"puts": &object.Buildtin{
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+			return NULL
+		},
+	},
 	"len": &object.Buildtin{
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
