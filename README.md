@@ -60,4 +60,7 @@ let add = fn(x, y) {
 let result = add(one, two);
 ```
 
+[fizzbuzz.monkey](fizzbuzz.monkey)も参照してください。
+
 _本リポジトリで実装されているインタープリタは、オリジナルの実装に加えて剰余演算子 `%` が追加されています。_
+
