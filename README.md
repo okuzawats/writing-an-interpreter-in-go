@@ -35,8 +35,16 @@ Settingsから、Format on Saveを有効化します。Visual Studio CodeのSett
 
 ## 実行
 
+### REPLの実行
+
 ```console
 % go run ./main
+```
+
+### プログラムファイルの実行
+
+```console
+% go run ./main.go fizzbuzz.monkey
 ```
 
 ## Monkey言語
